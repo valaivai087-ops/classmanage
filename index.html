@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>建模大師班導 OS | Classroom Master System</title>
+<style>
+  :root {
+    --navy: #1a2e5a;
+    --navy-light: #243770;
+    --teal: #0d7a8a;
+    --teal-light: #16a0b5;
+    --gold: #c9960c;
+    --gold-light: #e8b430;
+    --red: #c0392b;
+    --green: #1a7a4a;
+    --bg: #ffffff;
+    --bg2: #f5f7fa;
+    --bg3: #edf0f5;
+    --text: #1a1a2e;
+    --text2: #4a4a6a;
+    --text3: #7a7a9a;
+    --border: #dce1eb;
+    --shadow: 0 2px 12px rgba(26,46,90,0.10);
+    --shadow-lg: 0 6px 28px rgba(26,46,90,0.14);
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Microsoft JhengHei', 'PingFang TC', 'Noto Sans TC', sans-serif;
+    background: var(--bg2);
+    color: var(--text);
+    font-size: 17px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .app-header {
+    background: linear-gradient(135deg, var(--navy) 0%, #1e3a6e 50%, var(--teal) 100%);
+    color: #fff;
+    padding: 22px 24px 20px;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+  }
+  .header-inner { max-width: 960px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .header-brand { display: flex; align-items: center; gap: 14px; }
+  .header-icon { font-size: 2.2rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,.3)); }
+  .header-title-block {}
+  .header-title { font-size: 1.35rem; font-weight: 900; letter-spacing: .03em; line-height: 1.2; }
+  .header-sub { font-size: 0.82rem; opacity: .75; letter-spacing: .05em; margin-top: 2px; }
+  .header-badge {
+    background: var(--gold);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: .04em;
+    white-space: nowrap;
+  }
+
+  /* ── NAV TABS ── */
+  .nav-bar {
+    background: #fff;
+    border-bottom: 2px solid var(--border);
+    position: sticky; top: 74px; z-index: 90;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav-bar::-webkit-scrollbar { height: 3px; }
+  .nav-bar::-webkit-scrollbar-thumb { background: var(--teal-light); border-radius: 2px; }
+  .nav-inner { max-width: 960px; margin: 0 auto; display: flex; gap: 0; padding: 0 8px; }
+  .nav-btn {
+    background: none; border: none; cursor: pointer;
+    padding: 14px 18px 12px;
+    font-size: 0.93rem; font-weight: 600;
+    color: var(--text3);
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: all .18s;
+    font-family: inherit;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .nav-btn:hover { color: var(--teal); }
+  .nav-btn.active { color: var(--navy); border-bottom-color: var(--gold); }
+  .nav-btn .nav-icon { font-size: 1.1rem; }
+
+  /* ── MAIN LAYOUT ── */
+  .main { max-width: 960px; margin: 0 auto; padding: 28px 16px 60px; }
+
+  /* ── SECTION TITLE ── */
+  .section-head {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 22px;
+  }
+  .section-icon {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--navy), var(--teal));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; flex-shrink: 0;
+  }
+  .section-title-block {}
+  .section-title { font-size: 1.25rem; font-weight: 900; color: var(--navy); line-height: 1.2; }
+  .section-subtitle { font-size: 0.82rem; color: var(--text3); margin-top: 2px; letter-spacing: .04em; }
+
+  /* ── OVERVIEW CARD ── */
+  .overview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px; }
+  @media(max-width:600px){ .overview-grid { grid-template-columns: repeat(2,1fr); } }
+  .ov-card {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 18px 16px 14px;
+    box-shadow: var(--shadow);
+    border-top: 4px solid var(--teal);
+    cursor: pointer;
+    transition: transform .14s, box-shadow .14s;
+    position: relative;
+    overflow: hidden;
+  }
+  .ov-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+  .ov-card::after {
+    content: ''; position: absolute; right: -18px; bottom: -18px;
+    width: 70px; height: 70px; border-radius: 50%;
+    background: rgba(13,122,138,0.06);
+  }
+  .ov-num { font-size: 2rem; font-weight: 900; color: var(--teal); line-height: 1; }
+  .ov-zh { font-size: 1rem; font-weight: 700; color: var(--navy); margin-top: 4px; }
+  .ov-en { font-size: 0.72rem; color: var(--text3); letter-spacing: .04em; }
+  .ov-tag { font-size: 0.72rem; font-weight: 700; color: var(--gold); margin-top: 6px; }
+
+  /* ── LEVER CARDS ── */
+  .lever-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media(max-width:660px){ .lever-grid { grid-template-columns: 1fr; } }
+  .lever-card {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .lever-head {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 18px 14px;
+    cursor: pointer;
+    user-select: none;
+    background: linear-gradient(90deg, var(--bg2) 0%, #fff 100%);
+  }
+  .lever-num {
+    width: 38px; height: 38px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; font-weight: 900; color: #fff;
+    flex-shrink: 0;
+  }
+  .lever-title-block { flex: 1; }
+  .lever-zh { font-size: 1.05rem; font-weight: 800; color: var(--navy); }
+  .lever-en { font-size: 0.75rem; color: var(--text3); letter-spacing: .04em; }
+  .lever-core { font-size: 0.8rem; color: var(--text2); margin-top: 2px; }
+  .lever-arrow { color: var(--text3); font-size: 1.1rem; transition: transform .2s; }
+  .lever-card.open .lever-arrow { transform: rotate(90deg); }
+
+  .lever-body { display: none; border-top: 1px solid var(--border); }
+  .lever-card.open .lever-body { display: block; }
+
+  .node-list { padding: 14px 18px; display: flex; flex-direction: column; gap: 8px; }
+  .node-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 12px;
+    background: var(--bg2);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid transparent;
+  }
+  .node-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+  .node-text {}
+  .node-zh { font-size: 0.93rem; font-weight: 700; color: var(--navy); }
+  .node-en { font-size: 0.75rem; color: var(--text3); margin-top: 1px; }
+  .node-detail { font-size: 0.8rem; color: var(--text2); margin-top: 4px; line-height: 1.5; }
+
+  .lever-result {
+    margin: 0 18px 14px;
+    padding: 10px 14px;
+    background: linear-gradient(90deg, rgba(13,122,138,.06), rgba(13,122,138,.01));
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--teal);
+  }
+  .result-label { font-size: 0.72rem; font-weight: 700; color: var(--teal); letter-spacing: .06em; }
+  .result-zh { font-size: 0.92rem; font-weight: 700; color: var(--navy); }
+  .result-en { font-size: 0.75rem; color: var(--text3); }
+
+  /* ── SCENARIO SECTION ── */
+  .scenario-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media(max-width:660px){ .scenario-grid { grid-template-columns: 1fr; } }
+  .scenario-card {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .scenario-head {
+    padding: 14px 16px 12px;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 10px;
+    background: var(--bg2);
+  }
+  .scenario-emoji { font-size: 1.5rem; }
+  .scenario-htext {}
+  .scenario-zh { font-size: 1rem; font-weight: 800; color: var(--navy); }
+  .scenario-en { font-size: 0.73rem; color: var(--text3); letter-spacing: .03em; }
+  .scenario-arrow { margin-left: auto; color: var(--text3); transition: transform .2s; }
+  .scenario-card.open .scenario-arrow { transform: rotate(90deg); }
+  .scenario-body { display: none; border-top: 1px solid var(--border); padding: 14px 16px; }
+  .scenario-card.open .scenario-body { display: block; }
+
+  .compare-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .compare-box { border-radius: var(--radius-sm); padding: 10px 12px; }
+  .compare-box.bad { background: #fef2f2; border: 1px solid #fccaca; }
+  .compare-box.good { background: #f0faf5; border: 1px solid #a8dcc0; }
+  .compare-label { font-size: 0.7rem; font-weight: 800; letter-spacing: .07em; margin-bottom: 6px; }
+  .compare-box.bad .compare-label { color: var(--red); }
+  .compare-box.good .compare-label { color: var(--green); }
+  .compare-text { font-size: 0.85rem; color: var(--text); line-height: 1.55; }
+  .compare-en { font-size: 0.72rem; color: var(--text3); margin-top: 4px; }
+
+  .steps-list { display: flex; flex-direction: column; gap: 7px; }
+  .step-row { display: flex; align-items: flex-start; gap: 10px; padding: 8px 10px; border-radius: var(--radius-sm); background: var(--bg2); }
+  .step-no { min-width: 24px; height: 24px; border-radius: 50%; background: var(--teal); color: #fff; font-size: 0.78rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-content {}
+  .step-zh { font-size: 0.88rem; font-weight: 700; color: var(--navy); }
+  .step-en { font-size: 0.72rem; color: var(--text3); margin-top: 1px; }
+  .step-sub { font-size: 0.78rem; color: var(--text2); margin-top: 3px; }
+
+  /* ── FORMULA SECTION ── */
+  .formula-box {
+    background: linear-gradient(135deg, var(--navy) 0%, #1e3a6e 60%, var(--teal) 100%);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-lg);
+  }
+  .formula-title { font-size: 1.05rem; font-weight: 800; opacity: .8; letter-spacing: .08em; margin-bottom: 16px; }
+  .formula-chain { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; margin-bottom: 16px; }
+  .formula-item { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22); border-radius: 20px; padding: 5px 14px; font-size: 0.88rem; font-weight: 700; }
+  .formula-plus { font-size: 1.1rem; opacity: .5; }
+  .formula-arrow { font-size: 1.6rem; opacity: .5; width: 100%; margin: 6px 0; }
+  .formula-result { font-size: 1.4rem; font-weight: 900; color: var(--gold-light); }
+  .formula-result-en { font-size: 0.8rem; opacity: .6; letter-spacing: .04em; margin-top: 4px; }
+
+  .compare-table {
+    width: 100%; border-collapse: collapse;
+    background: #fff; border-radius: var(--radius); overflow: hidden;
+    box-shadow: var(--shadow); font-size: 0.88rem;
+    margin-bottom: 24px;
+  }
+  .compare-table th {
+    padding: 12px 14px; text-align: left; font-weight: 800;
+    font-size: 0.8rem; letter-spacing: .04em;
+  }
+  .compare-table th:nth-child(1) { background: var(--bg3); color: var(--text2); width: 22%; }
+  .compare-table th:nth-child(2) { background: #fef2f2; color: var(--red); width: 39%; }
+  .compare-table th:nth-child(3) { background: #f0faf5; color: var(--green); width: 39%; }
+  .compare-table td { padding: 11px 14px; border-top: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+  .compare-table td:nth-child(1) { font-weight: 700; color: var(--navy); background: var(--bg3); font-size: 0.82rem; }
+  .compare-table td:nth-child(2) { color: var(--text2); }
+  .compare-table td:nth-child(3) { color: var(--green); font-weight: 600; }
+
+  /* ── TOOLS SECTION ── */
+  .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  @media(max-width:600px){ .tools-grid { grid-template-columns: 1fr 1fr; } }
+  .tool-card {
+    background: #fff; border-radius: var(--radius);
+    box-shadow: var(--shadow); border: 1px solid var(--border);
+    padding: 16px 14px; text-align: center;
+    transition: transform .14s;
+  }
+  .tool-card:hover { transform: translateY(-2px); }
+  .tool-emoji { font-size: 2rem; margin-bottom: 8px; }
+  .tool-zh { font-size: 0.95rem; font-weight: 800; color: var(--navy); }
+  .tool-en { font-size: 0.72rem; color: var(--text3); margin-top: 2px; letter-spacing: .03em; }
+  .tool-items { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; }
+  .tool-item { font-size: 0.78rem; color: var(--text2); padding: 3px 0; border-top: 1px solid var(--border); }
+
+  /* ── SOP SECTION ── */
+  .sop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media(max-width:600px){ .sop-grid { grid-template-columns: 1fr; } }
+  .sop-card {
+    background: #fff; border-radius: var(--radius);
+    box-shadow: var(--shadow); border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .sop-head { padding: 14px 16px; background: linear-gradient(90deg, var(--navy), #243770); color: #fff; }
+  .sop-title { font-size: 1rem; font-weight: 800; }
+  .sop-en { font-size: 0.73rem; opacity: .7; letter-spacing: .04em; margin-top: 2px; }
+  .sop-steps { padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
+  .sop-step { display: flex; align-items: flex-start; gap: 10px; padding: 8px 10px; background: var(--bg2); border-radius: var(--radius-sm); }
+  .sop-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); flex-shrink: 0; margin-top: 7px; }
+  .sop-text { font-size: 0.85rem; color: var(--text); }
+  .sop-time { font-size: 0.72rem; color: var(--text3); }
+
+  /* ── PRINCIPLE BOX ── */
+  .principle-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+  @media(max-width:600px){ .principle-row { grid-template-columns: 1fr; } }
+  .principle-card {
+    background: #fff; border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 18px 16px;
+    border-top: 4px solid var(--gold);
+    text-align: center;
+  }
+  .principle-emoji { font-size: 2rem; margin-bottom: 8px; }
+  .principle-zh { font-size: 1rem; font-weight: 900; color: var(--navy); }
+  .principle-en { font-size: 0.73rem; color: var(--text3); letter-spacing: .04em; margin-top: 3px; }
+  .principle-text { font-size: 0.83rem; color: var(--text2); margin-top: 10px; line-height: 1.55; }
+
+  /* ── STUDENT CARD ── */
+  .student-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  @media(max-width:600px){ .student-grid { grid-template-columns: 1fr; } }
+  .student-card {
+    background: #fff; border-radius: var(--radius);
+    box-shadow: var(--shadow); border: 1px solid var(--border);
+    padding: 16px; text-align: center;
+  }
+  .student-icon { font-size: 2.2rem; margin-bottom: 8px; }
+  .student-title { font-size: 1.05rem; font-weight: 900; color: var(--navy); }
+  .student-en { font-size: 0.73rem; color: var(--teal); letter-spacing: .04em; margin-top: 2px; }
+  .student-list { margin-top: 12px; display: flex; flex-direction: column; gap: 5px; text-align: left; }
+  .student-li { font-size: 0.82rem; color: var(--text2); padding: 4px 8px; background: var(--bg2); border-radius: 6px; }
+  .student-li::before { content: '→ '; color: var(--teal); font-weight: 700; }
+
+  /* HIDDEN PAGES */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* TAG CHIPS */
+  .chip { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 12px; margin: 2px; }
+  .chip-gold { background: #fff7e0; color: var(--gold); border: 1px solid #f0d070; }
+  .chip-teal { background: #e5f7fa; color: var(--teal); border: 1px solid #b0dde5; }
+  .chip-navy { background: #eef1fa; color: var(--navy); border: 1px solid #c0cadf; }
+
+  /* QUOTE BOX */
+  .quote-box {
+    border-left: 5px solid var(--gold);
+    background: #fffbf0;
+    padding: 16px 20px; border-radius: 0 var(--radius) var(--radius) 0;
+    margin: 18px 0;
+  }
+  .quote-zh { font-size: 1.05rem; font-weight: 800; color: var(--navy); line-height: 1.5; }
+  .quote-en { font-size: 0.8rem; color: var(--text3); margin-top: 6px; font-style: italic; }
+
+  /* CHAIN */
+  .chain { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 14px 0; }
+  .chain-box { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 5px 12px; font-size: 0.85rem; font-weight: 700; color: var(--navy); }
+  .chain-arrow { color: var(--teal); font-size: 1rem; font-weight: 700; }
+
+  /* FOOTER */
+  .page-footer { text-align: center; margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--border); color: var(--text3); font-size: 0.77rem; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="app-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="header-icon">🏫</div>
+      <div class="header-title-block">
+        <div class="header-title">建模大師班導 OS</div>
+        <div class="header-sub">Classroom System Architect · Master Teacher OS</div>
+      </div>
+    </div>
+    <div class="header-badge">High Agency 班級</div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="nav-bar">
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="showPage('overview')" data-page="overview">
+      <span class="nav-icon">🗺️</span> 總覽 Overview
+    </button>
+    <button class="nav-btn" onclick="showPage('levers')" data-page="levers">
+      <span class="nav-icon">⚙️</span> 六大槓桿 6 Levers
+    </button>
+    <button class="nav-btn" onclick="showPage('scenarios')" data-page="scenarios">
+      <span class="nav-icon">🎯</span> 場景處理 Scenarios
+    </button>
+    <button class="nav-btn" onclick="showPage('cadres')" data-page="cadres">
+      <span class="nav-icon">👑</span> 幹部系統 Leaders
+    </button>
+    <button class="nav-btn" onclick="showPage('tools')" data-page="tools">
+      <span class="nav-icon">🛠️</span> 工具表單 Tools
+    </button>
+    <button class="nav-btn" onclick="showPage('formula')" data-page="formula">
+      <span class="nav-icon">✨</span> 終極公式 Formula
+    </button>
+  </div>
+</nav>
+
+<div class="main">
+
+<!-- ══════════════════════════ PAGE 1: OVERVIEW ══════════════════════════ -->
+<div class="page active" id="page-overview">
+
+  <div class="section-head">
+    <div class="section-icon">🗺️</div>
+    <div class="section-title-block">
+      <div class="section-title">班級操作系統總覽</div>
+      <div class="section-subtitle">Classroom Operating System · Full Overview</div>
+    </div>
+  </div>
+
+  <div class="quote-box">
+    <div class="quote-zh">普通班導管理學生。優秀班導帶領學生。建模大師班導設計六大槓桿，讓學生自己管理自己、自己激勵自己、自己成長。</div>
+    <div class="quote-en">Ordinary teachers manage students. Good teachers lead students. Master teachers design systems that make students manage, motivate, and grow themselves.</div>
+  </div>
+
+  <div class="overview-grid">
+    <div class="ov-card" onclick="showPage('levers')">
+      <div class="ov-num">6</div>
+      <div class="ov-zh">核心槓桿</div>
+      <div class="ov-en">Core Leverage Points</div>
+      <div class="ov-tag">↗ 點我看詳情</div>
+    </div>
+    <div class="ov-card" onclick="showPage('cadres')" style="border-top-color:var(--gold);">
+      <div class="ov-num" style="color:var(--gold)">6</div>
+      <div class="ov-zh">核心幹部</div>
+      <div class="ov-en">Core Student Leaders</div>
+      <div class="ov-tag" style="color:var(--navy)">↗ 點我看詳情</div>
+    </div>
+    <div class="ov-card" onclick="showPage('scenarios')" style="border-top-color:var(--navy);">
+      <div class="ov-num" style="color:var(--navy)">10</div>
+      <div class="ov-zh">常見場景</div>
+      <div class="ov-en">Common Scenarios</div>
+      <div class="ov-tag" style="color:var(--teal)">↗ 點我看詳情</div>
+    </div>
+    <div class="ov-card" onclick="showPage('tools')" style="border-top-color:var(--red);">
+      <div class="ov-num" style="color:var(--red)">6</div>
+      <div class="ov-zh">實用工具</div>
+      <div class="ov-en">Practical Tools</div>
+      <div class="ov-tag" style="color:var(--red)">↗ 點我看詳情</div>
+    </div>
+    <div class="ov-card" onclick="showPage('formula')" style="border-top-color:var(--gold);">
+      <div class="ov-num" style="color:var(--gold)">∞</div>
+      <div class="ov-zh">終極公式</div>
+      <div class="ov-en">Master Formula</div>
+      <div class="ov-tag" style="color:var(--navy)">↗ 點我看詳情</div>
+    </div>
+    <div class="ov-card" style="border-top-color:var(--green);">
+      <div class="ov-num" style="color:var(--green)">1%</div>
+      <div class="ov-zh">每日複利成長</div>
+      <div class="ov-en">1% Daily Compound Growth</div>
+      <div class="ov-tag" style="color:var(--green)">一年 → 37倍</div>
+    </div>
+  </div>
+
+  <!-- Master vs Ordinary comparison table -->
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>面向 Aspect</th>
+        <th>❌ 普通班導 Ordinary</th>
+        <th>✅ 建模大師班導 Master</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>管理焦點<br><small>Focus</small></td><td>管學生<br><small>Manage students</small></td><td>管系統，建立制度<br><small>Design systems & structures</small></td></tr>
+      <tr><td>遲到問題<br><small>Tardiness</small></td><td>責罵學生<br><small>Scold students</small></td><td>找遲到根因，改睡眠系統<br><small>Find root cause, fix sleep systems</small></td></tr>
+      <tr><td>手機問題<br><small>Phone Use</small></td><td>沒收手機<br><small>Confiscate phones</small></td><td>重建注意力系統 + 目標牆<br><small>Rebuild attention systems + dream wall</small></td></tr>
+      <tr><td>成績差<br><small>Poor Grades</small></td><td>要求努力<br><small>Demand more effort</small></td><td>錯題分析，找瓶頸<br><small>Error analysis, find bottlenecks</small></td></tr>
+      <tr><td>學習動機<br><small>Motivation</small></td><td>說教鼓勵<br><small>Lecture & encourage</small></td><td>建立未來感 + 科系地圖<br><small>Build future vision + career map</small></td></tr>
+      <tr><td>老師狀態<br><small>Teacher State</small></td><td>越來越累<br><small>Increasingly exhausted</small></td><td>越來越輕鬆<br><small>Increasingly free</small></td></tr>
+      <tr><td>班級結果<br><small>Class Result</small></td><td>老師在才運作<br><small>Only works when teacher is present</small></td><td>老師不在也自動運作<br><small>Runs automatically without teacher</small></td></tr>
+      <tr><td>終極目標<br><small>Ultimate Goal</small></td><td>班級不出事<br><small>No problems in class</small></td><td>培養終身成長者<br><small>Cultivate lifelong learners</small></td></tr>
+    </tbody>
+  </table>
+
+  <!-- Chain formula -->
+  <div class="principle-row">
+    <div class="principle-card">
+      <div class="principle-emoji">🏗️</div>
+      <div class="principle-zh">結構決定結果</div>
+      <div class="principle-en">Structure Determines Outcomes</div>
+      <div class="principle-text">改變系統，學生自然改變。改變文化，學生自然成長。<br><small>Change the system, students change naturally.</small></div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-emoji">⚡</div>
+      <div class="principle-zh">槓桿放大影響力</div>
+      <div class="principle-en">Leverage Amplifies Impact</div>
+      <div class="principle-text">老師管6個幹部，6個幹部影響35人，影響力倍增。<br><small>Teacher manages 6 leaders who influence 35 students.</small></div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-emoji">🌱</div>
+      <div class="principle-zh">文化塑造習慣</div>
+      <div class="principle-en">Culture Shapes Habits</div>
+      <div class="principle-text">規則管得到一時，文化影響一輩子。<br><small>Rules govern moments; culture shapes a lifetime.</small></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════ PAGE 2: 6 LEVERS ══════════════════════════ -->
+<div class="page" id="page-levers">
+
+  <div class="section-head">
+    <div class="section-icon">⚙️</div>
+    <div class="section-title-block">
+      <div class="section-title">六大班級槓桿系統</div>
+      <div class="section-subtitle">Six Classroom Leverage Systems · Click Each to Expand</div>
+    </div>
+  </div>
+
+  <!-- Generation chain -->
+  <div class="chain" style="justify-content:center; margin-bottom: 22px;">
+    <div class="chain-box">安全感 Safety</div><div class="chain-arrow">→</div>
+    <div class="chain-box">未來感 Vision</div><div class="chain-arrow">→</div>
+    <div class="chain-box">自治 Agency</div><div class="chain-arrow">→</div>
+    <div class="chain-box">回饋 Feedback</div><div class="chain-arrow">→</div>
+    <div class="chain-box">榮譽 Honor</div><div class="chain-arrow">→</div>
+    <div class="chain-box">成長文化 Growth</div>
+  </div>
+
+  <div class="lever-grid">
+
+    <!-- Lever 1 -->
+    <div class="lever-card" id="lever1">
+      <div class="lever-head" onclick="toggleLever('lever1')">
+        <div class="lever-num" style="background:var(--teal)">①</div>
+        <div class="lever-title-block">
+          <div class="lever-zh">安全感系統</div>
+          <div class="lever-en">Safety & Security System</div>
+          <div class="lever-core">核心問題：學生敢不敢成長？· Can students dare to grow?</div>
+        </div>
+        <div class="lever-arrow">▶</div>
+      </div>
+      <div class="lever-body">
+        <div class="node-list">
+          <div class="node-row" style="border-left-color:var(--teal)">
+            <div class="node-icon">📋</div>
+            <div class="node-text">
+              <div class="node-zh">明確規則 Clear Rules</div>
+              <div class="node-en">Explicit Boundaries & Expectations</div>
+              <div class="node-detail">準時到校、尊重他人、不霸凌、不作弊、手機規範、獎懲公開<br><small>Punctuality, respect, anti-bullying, no cheating, phone policy, transparent rewards</small></div>
+            </div>
+          </div>
+          <div class="node-row" style="border-left-color:var(--teal)">
+            <div class="node-icon">⏰</div>
+            <div class="node-text">
+              <div class="node-zh">固定作息 Fixed Routines</div>
+              <div class="node-en">Predictable Daily Structure</div>
+              <div class="node-detail">晨讀、午休、班會、反思、閱讀、運動 — 固定節奏降低焦慮<br><small>Morning reading, rest, class meeting, reflection, exercise — routine reduces anxiety</small></div>
+            </div>
+          </div>
+          <div class="node-row" style="border-left-color:var(--teal)">
+            <div class="node-icon">🤝</div>
+            <div class="node-text">
+              <div class="node-zh">班級公約 Class Charter</div>
+              <div class="node-en">Co-Created Class Agreement</div>
+              <div class="node-detail">共同討論→共同簽署→張貼教室→每月檢視<br><small>Co-discuss → co-sign → post in classroom → monthly review</small></div>
+            </div>
+          </div>
+          <div class="node-row" style="border-left-color:var(--teal)">
+            <div class="node-icon">🧭</div>
+            <div class="node-text">
+              <div class="node-zh">老師可預測 Teacher Consistency</div>
+              <div class="node-en">Predictable, Stable Teacher Behavior</div>
+              <div class="node-detail">說到做到、標準一致、公平處理、穩定情緒<br><small>Keep promises, consistent standards, fair handling, emotional stability</small></div>
+            </div>
+          </div>
+          <div class="node-row" style="border-left-color:var(--teal)">
+            <div class="node-icon">👥</div>
+            <div class="node-text">
+              <div class="node-zh">同儕支持 Peer Support</div>
+              <div class="node-en">Buddy System & Mutual Support</div>
+              <div class="node-detail">學伴制度、小組合作、互助學習、陪伴低潮同學<br><small>Buddy pairs, group cooperation, peer tutoring, supporting struggling students</small></div>
+            </div>
+          </div>
+          <div class="node-row" style="border-left-color:var(--teal)">
+            <div class="node-icon">🏠</div>
+            <div class="node-text">
+              <div class="node-zh">歸屬感 Sense of Belonging</div>
+              <div class="node-en">Class Identity & Shared Purpose</div>
+              <div class="node-detail">班服、班呼、班級活動、生日祝福、共同目標<br><small>Class uniform, chant, activities, birthday celebrations, shared goals</small></div>
+            </div>
+          </div>
+        </div>
+        <div class="lever-result">
+          <div class="result-label">⚡ 最終結果 Outcome</div>
+          <div class="result-zh">安全感足夠的學生，才能開始成長</div>
+          <div class="result-en">Students with security can begin to grow and take risks</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lever 2 -->
+    <div class="lever-card" id="lever2">
+      <div class="lever-head" onclick="toggleLever('lever2')">
+        <div class="lever-num" style="background:var(--gold)">②</div>
+        <div class="lever-title-block">
+          <div class="lever-zh">未來感系統</div>
+          <div class="lever-en">Future Vision System</div>
+          <div class="lever-core">核心問題：學生為什麼要努力？· Why should students work hard?</div>
+        </div>
+        <div class="lever-arrow">▶</div>
+      </div>
+      <div class="lever-body">
+        <div class="node-list">
+          <div class="node-row" style="border-left-color:var(--gold)">
+            <div class="node-icon">🌟</div>
+            <div class="node-text">
+              <div class="node-zh">夢想牆 Dream Wall</div>
+              <div class="node-en">Vision Board for the Future Self</div>
+              <div class="node-detail">夢想大學、科系、工作、收入、能力、人生 — 每月更新<br><small>Dream university, major, job, income, skills, life — update monthly</small></div>
+            </div>
+          </div>
+          <div class="node-row" style="border-left-color:var(--gold)">
+            <div class="node-icon">🗺️</div>
+            <div class="node-text">
+              <div class="node-zh">科系地圖 Major Map</div>
+              <div class="node-en">University Major Navigation Guide</div>
+              <div class="node-detail">醫學、工程、商管、教育、法律、設計 — 每月認識一科系<br><small>Medicine, engineering, business, education, law, design — one major per month</small></div>
+            </div>
+          </div>
+          <div class="node-row" style="border-left-color:var(--gold)">
+            <div class="node-icon">💼</div>
+            <div class="node-text">
+              <div class="node-zh">職涯分享 Career Talks</div>
+              <div class="node-en">Real-World Career Role Models</div>
+              <div class="node-detail">邀請各行業人士分享：工作內容、重要能力、如何準備<br><small>Invite professionals to share: job content, key skills, how to prepare</small></div>
+            </div>
+          </div>
+          <div class="node-row" style="border-left-color:var(--gold)">
+            <div class="node-icon">🎓</div>
+            <div class="node-text">
+              <div class="node-zh">目標設定 Goal Setting</div>
+              <div class="node-en">3-Level Goal Architecture</div>
+              <div class="node-detail">今日目標 → 本週目標 → 本月目標 → 學期目標 → 人生目標<br><small>Daily → Weekly → Monthly → Semester → Life goals</small></div>
+            </div>
+          </div>
+          <div class="node-row" style="border-left-color:var(--gold)">
+            <div class="node-icon">📊</div>
+            <div class="node-text">
+              <div class="node-zh">薪資地圖 Salary Map</div>
+              <div class="node-en">Real-World Income Reference</div>
+              <div class="node-detail">護理師4~8萬 / 藥師7~15萬 / 工程師5~20萬 / 醫師10~50萬+<br><small>Nurse 40-80K / Pharmacist 70-150K / Engineer 50-200K / Doctor 100K+</small></div>
+            </div>
+          </div>
+          <div class="node-row" style="border-left-color:var(--gold)">
+            <div class="node-icon">🔮</div>
+            <div class="node-text">
+              <div class="node-zh">未來模擬器 Future Simulator</div>
+              <div class="node-en">AI-Powered Life Path Simulation</div>
+              <div class="node-detail">若每天滑手機5小時 vs 每天背20單字，三年後分別怎樣？<br><small>What if phone 5h/day vs 20 vocab/day — simulate your life in 3 years</small></div>
+            </div>
+          </div>
+        </div>
+        <div class="lever-result" style="border-left-color:var(--gold)">
+          <div class="result-label" style="color:var(--gold)">⚡ 最終結果 Outcome</div>
+          <div class="result-zh">看見未來的人，不用催也會努力</div>
+          <div class="result-en">Students who see the future don't need to be pushed</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lever 3 -->
+    <div class="lever-card" id="lever3">
+      <div class="lever-head" onclick="toggleLever('lever3')">
+        <div class="lever-num" style="background:var(--navy)">③</div>
+        <div class="lever-title-block">
+          <div class="lever-zh">自治系統</div>
+          <div class="lever-en">Student Self-Governance System</div>
+          <div class="lever-core">核心問題：老師不在怎麼辦？· What happens when the teacher is absent?</div>
+        </div>
+        <div class="lever-arrow">▶</div>
+      </div>
+      <div class="lever-body">
+        <div class="node-list">
+          <div class="node-row" style="border-left-color:var(--navy)"><div class="node-icon">📚</div><div class="node-text"><div class="node-zh">學習長 Learning Director</div><div class="node-en">Learning System Manager</div><div class="node-detail">作業追蹤、學習榜、錯題庫、讀書會、考前規劃<br><small>Homework tracking, study boards, error banks, study groups, exam planning</small></div></div></div>
+          <div class="node-row" style="border-left-color:var(--navy)"><div class="node-icon">🤖</div><div class="node-text"><div class="node-zh">AI長 AI Director</div><div class="node-en">Digital Learning System Manager</div><div class="node-detail">AI教學、提示詞整理、AI工具分享、簡報製作、學習診斷<br><small>AI teaching, prompt curation, tool sharing, presentations, learning diagnostics</small></div></div></div>
+          <div class="node-row" style="border-left-color:var(--navy)"><div class="node-icon">🔥</div><div class="node-text"><div class="node-zh">激勵長 Motivation Director</div><div class="node-en">Energy & Motivation System Manager</div><div class="node-detail">進步榜、夢想牆、金句分享、成功案例、鼓勵活動<br><small>Progress boards, dream walls, quote sharing, success stories, pep activities</small></div></div></div>
+          <div class="node-row" style="border-left-color:var(--navy)"><div class="node-icon">📖</div><div class="node-text"><div class="node-zh">閱讀長 Reading Director</div><div class="node-en">Reading Culture System Manager</div><div class="node-detail">晨讀管理、閱讀榜、書籍推薦、閱讀心得、讀書會<br><small>Morning reading, rankings, book recommendations, reading journals, book clubs</small></div></div></div>
+          <div class="node-row" style="border-left-color:var(--navy)"><div class="node-icon">🏃</div><div class="node-text"><div class="node-zh">運動長 Fitness Director</div><div class="node-en">Health & Vitality System Manager</div><div class="node-detail">晨操、運動挑戰、健康紀錄、喝水提醒、睡眠管理<br><small>Morning exercise, challenges, health tracking, hydration reminders, sleep management</small></div></div></div>
+          <div class="node-row" style="border-left-color:var(--navy)"><div class="node-icon">🔄</div><div class="node-text"><div class="node-zh">反思長 Reflection Director</div><div class="node-en">Update & Renewal System Manager</div><div class="node-detail">反思表、週檢討、班級建議箱、成長日記、制度改善<br><small>Reflection forms, weekly review, suggestion box, growth journals, system improvement</small></div></div></div>
+        </div>
+        <div class="lever-result" style="border-left-color:var(--navy)">
+          <div class="result-label" style="color:var(--navy)">⚡ 最終結果 Outcome</div>
+          <div class="result-zh">老師管6人，6人影響35人，影響力倍增</div>
+          <div class="result-en">Teacher manages 6 leaders; 6 leaders influence 35 students</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lever 4 -->
+    <div class="lever-card" id="lever4">
+      <div class="lever-head" onclick="toggleLever('lever4')">
+        <div class="lever-num" style="background:var(--red)">④</div>
+        <div class="lever-title-block">
+          <div class="lever-zh">回饋系統</div>
+          <div class="lever-en">Feedback Loop System</div>
+          <div class="lever-core">核心問題：如何持續進步？· How to continuously improve?</div>
+        </div>
+        <div class="lever-arrow">▶</div>
+      </div>
+      <div class="lever-body">
+        <div class="node-list">
+          <div class="node-row" style="border-left-color:var(--red)"><div class="node-icon">📅</div><div class="node-text"><div class="node-zh">每週檢討 Weekly Review</div><div class="node-en">Weekly Progress Check-In</div><div class="node-detail">本週進步 / 本週問題 / 改善方案 / 下週計畫<br><small>Wins this week / Problems / Solutions / Next week plan</small></div></div></div>
+          <div class="node-row" style="border-left-color:var(--red)"><div class="node-icon">❌</div><div class="node-text"><div class="node-zh">錯題分析 Error Analysis</div><div class="node-en">Test Error Classification System</div><div class="node-detail">英文：單字 / 文法 / 閱讀 / 推論 / 粗心 — 找最大失分源<br><small>English: vocab / grammar / reading / inference / carelessness — find biggest loss source</small></div></div></div>
+          <div class="node-row" style="border-left-color:var(--red)"><div class="node-icon">📊</div><div class="node-text"><div class="node-zh">習慣追蹤 Habit Tracking</div><div class="node-en">Daily Behavior Monitoring</div><div class="node-detail">睡眠 / 閱讀 / 運動 / 手機 / 作業 / 晨讀 — 量化才能優化<br><small>Sleep / reading / exercise / phone / homework / morning study — quantify to optimize</small></div></div></div>
+          <div class="node-row" style="border-left-color:var(--red)"><div class="node-icon">📈</div><div class="node-text"><div class="node-zh">學習追蹤 Academic Tracking</div><div class="node-en">Progress Data Dashboard</div><div class="node-detail">成績 / 單字量 / 閱讀量 / 作業率 / 出席率 / 專注度<br><small>Grades / vocabulary / reading / homework rate / attendance / focus</small></div></div></div>
+          <div class="node-row" style="border-left-color:var(--red)"><div class="node-icon">📮</div><div class="node-text"><div class="node-zh">匿名建議箱 Anonymous Feedback</div><div class="node-en">Safe Space for Honest Input</div><div class="node-detail">班級問題、老師建議、制度建議、活動建議、人際問題<br><small>Class issues, teacher feedback, policy suggestions, activity ideas, relationship issues</small></div></div></div>
+          <div class="node-row" style="border-left-color:var(--red)"><div class="node-icon">🏛️</div><div class="node-text"><div class="node-zh">班會改善 Class Meeting Reform</div><div class="node-en">Democratic Decision-Making Process</div><div class="node-detail">蒐集問題 → 提出方案 → 投票 → 執行 → 檢討 → 更新<br><small>Collect → Propose → Vote → Execute → Review → Update</small></div></div></div>
+        </div>
+        <div class="lever-result" style="border-left-color:var(--red)">
+          <div class="result-label" style="color:var(--red)">⚡ 最終結果 Outcome</div>
+          <div class="result-zh">回饋速度，決定進步速度</div>
+          <div class="result-en">The speed of feedback determines the speed of progress</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lever 5 -->
+    <div class="lever-card" id="lever5">
+      <div class="lever-head" onclick="toggleLever('lever5')">
+        <div class="lever-num" style="background:#7b2d8b">⑤</div>
+        <div class="lever-title-block">
+          <div class="lever-zh">榮譽系統</div>
+          <div class="lever-en">Honor & Recognition System</div>
+          <div class="lever-core">核心問題：如何放大好行為？· How to amplify good behaviors?</div>
+        </div>
+        <div class="lever-arrow">▶</div>
+      </div>
+      <div class="lever-body">
+        <div class="node-list">
+          <div class="node-row" style="border-left-color:#7b2d8b"><div class="node-icon">📈</div><div class="node-text"><div class="node-zh">進步榜 Progress Board</div><div class="node-en">Growth Ranking (not talent)</div><div class="node-detail">成績/閱讀/運動/出席/習慣/態度進步 — 獎勵進步，不只獎勵天才<br><small>Grade/reading/exercise/attendance progress — reward growth, not just talent</small></div></div></div>
+          <div class="node-row" style="border-left-color:#7b2d8b"><div class="node-icon">📚</div><div class="node-text"><div class="node-zh">閱讀榜 Reading Board</div><div class="node-en">Reading Engagement Ranking</div><div class="node-detail">閱讀時數、閱讀本數、心得數量、閱讀分享、深度<br><small>Hours, books, reflections, sharing, depth — track all dimensions of reading</small></div></div></div>
+          <div class="node-row" style="border-left-color:#7b2d8b"><div class="node-icon">🏃</div><div class="node-text"><div class="node-zh">運動榜 Fitness Board</div><div class="node-en">Physical Activity Ranking</div><div class="node-detail">運動天數、時數、跑步距離、體能進步、健康習慣<br><small>Days, hours, distance, physical improvement, healthy habits</small></div></div></div>
+          <div class="node-row" style="border-left-color:#7b2d8b"><div class="node-icon">🫶</div><div class="node-text"><div class="node-zh">服務榜 Service Board</div><div class="node-en">Altruism & Service Ranking</div><div class="node-detail">幫助同學、服務班級、志工服務、關懷、解決問題<br><small>Helping peers, serving class, volunteering, caring, problem-solving</small></div></div></div>
+          <div class="node-row" style="border-left-color:#7b2d8b"><div class="node-icon">💡</div><div class="node-text"><div class="node-zh">學習榜 Study Board</div><div class="node-en">Academic Engagement Ranking</div><div class="node-detail">作業完成率、單字量、閱讀量、考試進步、自主學習<br><small>Homework completion, vocab, reading, exam improvement, self-directed study</small></div></div></div>
+          <div class="node-row" style="border-left-color:#7b2d8b"><div class="node-icon">🙏</div><div class="node-text"><div class="node-zh">感恩榜 Gratitude Board</div><div class="node-en">Kindness & Gratitude Ranking</div><div class="node-detail">感謝次數、鼓勵同學、正向發言、分享善意、同理他人<br><small>Gratitude count, encouragement, positive speech, sharing kindness, empathy</small></div></div></div>
+        </div>
+        <div class="lever-result" style="border-left-color:#7b2d8b">
+          <div class="result-label" style="color:#7b2d8b">⚡ 最終結果 Outcome</div>
+          <div class="result-zh">被看見的行為，容易重複發生</div>
+          <div class="result-en">Behaviors that are seen and recognized are more likely to repeat</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lever 6 -->
+    <div class="lever-card" id="lever6">
+      <div class="lever-head" onclick="toggleLever('lever6')">
+        <div class="lever-num" style="background:var(--green)">⑥</div>
+        <div class="lever-title-block">
+          <div class="lever-zh">成長文化</div>
+          <div class="lever-en">Growth Culture System</div>
+          <div class="lever-core">核心問題：如何讓進步變成習慣？· How to make progress a habit?</div>
+        </div>
+        <div class="lever-arrow">▶</div>
+      </div>
+      <div class="lever-body">
+        <div class="node-list">
+          <div class="node-row" style="border-left-color:var(--green)"><div class="node-icon">📚</div><div class="node-text"><div class="node-zh">每天閱讀 Daily Reading</div><div class="node-en">10-Min Daily Reading Habit</div><div class="node-detail">晨讀10分鐘 / 課外閱讀 / 英文閱讀 / 科普閱讀 → 提升思考力<br><small>Morning 10min / extracurricular / English / science reading → builds thinking ability</small></div></div></div>
+          <div class="node-row" style="border-left-color:var(--green)"><div class="node-icon">🏃</div><div class="node-text"><div class="node-zh">每天運動 Daily Exercise</div><div class="node-en">Daily Physical Activity Habit</div><div class="node-detail">伸展 / 跑步 / 健走 / 核心訓練 → 提升生命力與專注力<br><small>Stretching / running / walking / core training → boosts vitality and focus</small></div></div></div>
+          <div class="node-row" style="border-left-color:var(--green)"><div class="node-icon">🌙</div><div class="node-text"><div class="node-zh">每天反思 Daily Reflection</div><div class="node-en">Daily Self-Update Ritual</div><div class="node-detail">學到什麼 / 進步什麼 / 感謝什麼 / 犯什麼錯 / 如何改善 / 明日目標<br><small>What did I learn / improve / appreciate / do wrong / how to improve / tomorrow's goals</small></div></div></div>
+          <div class="node-row" style="border-left-color:var(--green)"><div class="node-icon">🙏</div><div class="node-text"><div class="node-zh">每天感恩 Daily Gratitude</div><div class="node-en">Gratitude for Life & People</div><div class="node-detail">感謝父母、老師、同學、自己、機會、生命 → 提升幸福力<br><small>Grateful for parents, teachers, peers, self, opportunities, life → builds happiness</small></div></div></div>
+          <div class="node-row" style="border-left-color:var(--green)"><div class="node-icon">📈</div><div class="node-text"><div class="node-zh">每天進步1% Daily 1% Growth</div><div class="node-en">Compound Growth Engine</div><div class="node-detail">多背1字/多讀1頁/多做1題/多運動1分/多幫助1人 → 複利效應<br><small>+1 word / +1 page / +1 problem / +1 min exercise / help 1 person → compound growth</small></div></div></div>
+          <div class="node-row" style="border-left-color:var(--green)"><div class="node-icon">🫶</div><div class="node-text"><div class="node-zh">每天幫助他人 Daily Altruism</div><div class="node-en">High-Dimensional Altruism = Self-Benefit</div><div class="node-detail">借筆記、教同學、陪伴、鼓勵、分享資源、主動服務 → 高維利他=利己<br><small>Share notes, teach peers, accompany, encourage, share resources → altruism = self-growth</small></div></div></div>
+        </div>
+        <div class="lever-result" style="border-left-color:var(--green)">
+          <div class="result-label" style="color:var(--green)">⚡ 最終結果 Outcome</div>
+          <div class="result-zh">文化就是每天重複做的事；習慣決定命運</div>
+          <div class="result-en">Culture is what you do every day; habits determine destiny</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════ PAGE 3: SCENARIOS ══════════════════════════ -->
+<div class="page" id="page-scenarios">
+
+  <div class="section-head">
+    <div class="section-icon">🎯</div>
+    <div class="section-title-block">
+      <div class="section-title">常見場景處理手冊</div>
+      <div class="section-subtitle">Scenario Response Guide · Systems Thinking Approach</div>
+    </div>
+  </div>
+
+  <div class="scenario-grid">
+
+    <!-- Tardiness -->
+    <div class="scenario-card" id="s1">
+      <div class="scenario-head" onclick="toggleScenario('s1')">
+        <div class="scenario-emoji">⏰</div>
+        <div class="scenario-htext">
+          <div class="scenario-zh">面對遲到</div>
+          <div class="scenario-en">Handling Tardiness</div>
+        </div>
+        <div class="scenario-arrow">▶</div>
+      </div>
+      <div class="scenario-body">
+        <div class="compare-pair">
+          <div class="compare-box bad"><div class="compare-label">❌ 普通做法</div><div class="compare-text">遲到 → 責罵處罰</div><div class="compare-en">Late → Scold & punish</div></div>
+          <div class="compare-box good"><div class="compare-label">✅ 建模做法</div><div class="compare-text">遲到 → 找根因 → 修系統</div><div class="compare-en">Late → Find root cause → Fix system</div></div>
+        </div>
+        <div class="steps-list">
+          <div class="step-row"><div class="step-no">1</div><div class="step-content"><div class="step-zh">統計遲到原因 — 用數據代替猜測</div><div class="step-en">Data-based root cause analysis</div><div class="step-sub">手機65% / 睡過頭15% / 交通10% / 其他10%</div></div></div>
+          <div class="step-row"><div class="step-no">2</div><div class="step-content"><div class="step-zh">睡眠調查 — 找高風險學生</div><div class="step-en">Sleep survey to find at-risk students</div><div class="step-sub">少於6小時連續3天 → 重點關懷</div></div></div>
+          <div class="step-row"><div class="step-no">3</div><div class="step-content"><div class="step-zh">手機使用調查 — 找熬夜根源</div><div class="step-en">Screen time audit for late-night habits</div><div class="step-sub">手機 → 睡眠 → 專注力 → 成績 → 遲到</div></div></div>
+          <div class="step-row"><div class="step-no">4</div><div class="step-content"><div class="step-zh">晨間簽到制度 + 早到積分</div><div class="step-en">Early arrival points & tracking system</div><div class="step-sub">早到1天+1分；連續一月+30分；可兌換獎品</div></div></div>
+          <div class="step-row"><div class="step-no">5</div><div class="step-content"><div class="step-zh">晨間儀式 — 讓學生期待早到</div><div class="step-en">Morning ritual that makes early arrival worth it</div><div class="step-sub">感恩→深呼吸→晨讀→英文單字→今日目標</div></div></div>
+        </div>
+        <div class="quote-box" style="margin-top:12px">
+          <div class="quote-zh">不是讓學生「不敢遲到」，而是讓學生「願意早到」</div>
+          <div class="quote-en">Not "scared to be late" but "wanting to arrive early"</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone -->
+    <div class="scenario-card" id="s2">
+      <div class="scenario-head" onclick="toggleScenario('s2')">
+        <div class="scenario-emoji">📱</div>
+        <div class="scenario-htext">
+          <div class="scenario-zh">面對手機問題</div>
+          <div class="scenario-en">Handling Phone Addiction</div>
+        </div>
+        <div class="scenario-arrow">▶</div>
+      </div>
+      <div class="scenario-body">
+        <div class="compare-pair">
+          <div class="compare-box bad"><div class="compare-label">❌ 普通做法</div><div class="compare-text">手機 → 沒收</div><div class="compare-en">Phone → Confiscate</div></div>
+          <div class="compare-box good"><div class="compare-label">✅ 建模做法</div><div class="compare-text">手機成癮 → 注意力失衡 → 未來感不足 → 修系統</div><div class="compare-en">Addiction → Attention loss → No future vision → Fix system</div></div>
+        </div>
+        <div class="steps-list">
+          <div class="step-row"><div class="step-no">1</div><div class="step-content"><div class="step-zh">手機停車場 — 先管理環境，不考驗意志力</div><div class="step-en">Phone parking lot — design environment, not willpower</div><div class="step-sub">進教室→手機放指定位置→下課領回</div></div></div>
+          <div class="step-row"><div class="step-no">2</div><div class="step-content"><div class="step-zh">專注挑戰賽 — 把專注變成遊戲</div><div class="step-en">Focus challenge — gamify concentration</div><div class="step-sub">25分鐘專注→完成任務→獲得積分→月表揚</div></div></div>
+          <div class="step-row"><div class="step-no">3</div><div class="step-content"><div class="step-zh">每日使用紀錄 — 量化才能優化</div><div class="step-en">Daily screen time log — measure to improve</div><div class="step-sub">平均5小時→目標4小時→目標3小時</div></div></div>
+          <div class="step-row"><div class="step-no">4</div><div class="step-content"><div class="step-zh">閱讀替代方案 — 替代勝過禁止</div><div class="step-en">Reading alternatives — replace, don't just ban</div><div class="step-sub">漫畫、桌遊、英文小說、AI學習區、討論區</div></div></div>
+          <div class="step-row"><div class="step-no">5</div><div class="step-content"><div class="step-zh">未來目標牆 — 提高長期感</div><div class="step-en">Dream wall — build long-term thinking</div><div class="step-sub">手機提供立即快樂；目標提供未來快樂</div></div></div>
+        </div>
+        <div class="quote-box" style="margin-top:12px">
+          <div class="quote-zh">不是讓學生「少用手機」，而是讓學生找到比手機更值得投入的目標</div>
+          <div class="quote-en">Not "use phone less" but "find something more worthy than the phone"</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Poor grades -->
+    <div class="scenario-card" id="s3">
+      <div class="scenario-head" onclick="toggleScenario('s3')">
+        <div class="scenario-emoji">📉</div>
+        <div class="scenario-htext">
+          <div class="scenario-zh">面對成績差</div>
+          <div class="scenario-en">Handling Poor Academic Performance</div>
+        </div>
+        <div class="scenario-arrow">▶</div>
+      </div>
+      <div class="scenario-body">
+        <div class="compare-pair">
+          <div class="compare-box bad"><div class="compare-label">❌ 普通做法</div><div class="compare-text">成績差 → 不夠努力</div><div class="compare-en">Poor grades → "not trying hard enough"</div></div>
+          <div class="compare-box good"><div class="compare-label">✅ 建模做法</div><div class="compare-text">成績差 → 找瓶頸 → 設策略 → 精準改善</div><div class="compare-en">Poor grades → Find bottleneck → Design strategy</div></div>
+        </div>
+        <div class="steps-list">
+          <div class="step-row"><div class="step-no">1</div><div class="step-content"><div class="step-zh">錯題分析 — 考卷是找漏洞的工具</div><div class="step-en">Error analysis — tests reveal learning gaps</div><div class="step-sub">英文：單字40% / 閱讀30% / 文法20% / 粗心10%</div></div></div>
+          <div class="step-row"><div class="step-no">2</div><div class="step-content"><div class="step-zh">弱科診斷 — 不要平均用力</div><div class="step-en">Weak subject diagnosis — target the bottleneck</div><div class="step-sub">補最弱科通常進步最快</div></div></div>
+          <div class="step-row"><div class="step-no">3</div><div class="step-content"><div class="step-zh">學習小組 — 異質分組，教別人是最好的學習</div><div class="step-en">Study groups — peer teaching maximizes learning</div><div class="step-sub">高+中+低混合；每週共同解題、互相教學</div></div></div>
+          <div class="step-row"><div class="step-no">4</div><div class="step-content"><div class="step-zh">學霸配對 — 縮短學習距離</div><div class="step-en">High-achiever pairing — bridge the gap</div><div class="step-sub">教方法，不是給答案；每週30分鐘陪跑</div></div></div>
+          <div class="step-row"><div class="step-no">5</div><div class="step-content"><div class="step-zh">個人改善計畫 — 因材施教</div><div class="step-en">Personal improvement plan — personalized paths</div><div class="step-sub">學生A英文弱→每日20字+每日閱讀1篇+每週模考</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Motivation -->
+    <div class="scenario-card" id="s4">
+      <div class="scenario-head" onclick="toggleScenario('s4')">
+        <div class="scenario-emoji">💫</div>
+        <div class="scenario-htext">
+          <div class="scenario-zh">面對學習動機低落</div>
+          <div class="scenario-en">Handling Low Motivation</div>
+        </div>
+        <div class="scenario-arrow">▶</div>
+      </div>
+      <div class="scenario-body">
+        <div class="compare-pair">
+          <div class="compare-box bad"><div class="compare-label">❌ 普通做法</div><div class="compare-text">沒動機 → 加油！不要放棄！</div><div class="compare-en">No motivation → "Try harder! Don't give up!"</div></div>
+          <div class="compare-box good"><div class="compare-label">✅ 建模做法</div><div class="compare-text">沒動機 → 未來感不足 → 目標不清 → 建立方向感</div><div class="compare-en">No motivation → No future vision → Build direction</div></div>
+        </div>
+        <div class="steps-list">
+          <div class="step-row"><div class="step-no">1</div><div class="step-content"><div class="step-zh">夢想牆 + 科系地圖 — 讓努力有方向</div><div class="step-en">Dream wall + major map — give effort a direction</div></div></div>
+          <div class="step-row"><div class="step-no">2</div><div class="step-content"><div class="step-zh">薪資地圖 — 連結現實，看見努力的價值</div><div class="step-en">Salary map — connect effort to real-world value</div></div></div>
+          <div class="step-row"><div class="step-no">3</div><div class="step-content"><div class="step-zh">學長姐分享 — 榜樣讓夢想變真實</div><div class="step-en">Senior student talks — make dreams feel achievable</div></div></div>
+          <div class="step-row"><div class="step-no">4</div><div class="step-content"><div class="step-zh">未來模擬器 — 今天的選擇決定三年後的自己</div><div class="step-en">Future simulator — choices today shape the future self</div><div class="step-sub">AI模擬18/22/30/40歲的不同人生版本</div></div></div>
+        </div>
+        <div class="quote-box" style="margin-top:12px">
+          <div class="quote-zh">當學生開始看見未來，動機就不需要老師一直推</div>
+          <div class="quote-en">When students see the future, motivation no longer needs to be pushed</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conflict -->
+    <div class="scenario-card" id="s5">
+      <div class="scenario-head" onclick="toggleScenario('s5')">
+        <div class="scenario-emoji">⚡</div>
+        <div class="scenario-htext">
+          <div class="scenario-zh">面對同學衝突</div>
+          <div class="scenario-en">Handling Student Conflicts</div>
+        </div>
+        <div class="scenario-arrow">▶</div>
+      </div>
+      <div class="scenario-body">
+        <div class="compare-pair">
+          <div class="compare-box bad"><div class="compare-label">❌ 普通做法</div><div class="compare-text">衝突 → 處罰 → 暫時安靜</div><div class="compare-en">Conflict → Punish → Temporary silence</div></div>
+          <div class="compare-box good"><div class="compare-label">✅ 建模做法</div><div class="compare-text">衝突 → 需求衝突 → 溝通不足 → 重建連結</div><div class="compare-en">Conflict → Unmet needs → Poor communication → Rebuild connection</div></div>
+        </div>
+        <div class="steps-list">
+          <div class="step-row"><div class="step-no">1</div><div class="step-content"><div class="step-zh">雙方對話 — 老師是翻譯者，不是法官</div><div class="step-en">Facilitated dialogue — teacher as translator, not judge</div><div class="step-sub">發生什麼→你的感受→你希望什麼→未來怎麼做</div></div></div>
+          <div class="step-row"><div class="step-no">2</div><div class="step-content"><div class="step-zh">同理訓練 — 站在別人角度</div><div class="step-en">Empathy training — perspective taking</div><div class="step-sub">角色扮演 / 情境模擬 / 理解比說服更有力量</div></div></div>
+          <div class="step-row"><div class="step-no">3</div><div class="step-content"><div class="step-zh">合作活動 — 共同目標最容易建立連結</div><div class="step-en">Collaborative activities — shared goals build bonds</div><div class="step-sub">一起吃苦→一起成功→感情變好</div></div></div>
+          <div class="step-row"><div class="step-no">4</div><div class="step-content"><div class="step-zh">感恩活動 — 注意力放優點，關係往那走</div><div class="step-en">Gratitude activities — attention shapes relationship quality</div><div class="step-sub">感謝卡、匿名感謝牆、每週感謝一位同學</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Low-mood students -->
+    <div class="scenario-card" id="s6">
+      <div class="scenario-head" onclick="toggleScenario('s6')">
+        <div class="scenario-emoji">🌧️</div>
+        <div class="scenario-htext">
+          <div class="scenario-zh">面對低潮學生</div>
+          <div class="scenario-en">Supporting Struggling Students</div>
+        </div>
+        <div class="scenario-arrow">▶</div>
+      </div>
+      <div class="scenario-body">
+        <div class="compare-pair">
+          <div class="compare-box bad"><div class="compare-label">❌ 普通做法</div><div class="compare-text">低潮 → 加油！振作！</div><div class="compare-en">Low → "Cheer up! Come on!"</div></div>
+          <div class="compare-box good"><div class="compare-label">✅ 建模做法</div><div class="compare-text">低潮 → 希望下降 → 建立成功經驗 → 重建自信</div><div class="compare-en">Low → Loss of hope → Build small successes → Rebuild confidence</div></div>
+        </div>
+        <div class="steps-list">
+          <div class="step-row"><div class="step-no">1</div><div class="step-content"><div class="step-zh">定期關心 — 讓學生知道有人在乎</div><div class="step-en">Regular check-ins — "someone cares about me"</div><div class="step-sub">每週5分鐘一對一；高風險學生每週一次</div></div></div>
+          <div class="step-row"><div class="step-no">2</div><div class="step-content"><div class="step-zh">建立成功經驗 — 給一定能做到的小目標</div><div class="step-en">Build success experiences — achievable micro-goals</div><div class="step-sub">今天背5個單字→完成→得到成功感</div></div></div>
+          <div class="step-row"><div class="step-no">3</div><div class="step-content"><div class="step-zh">同儕陪伴 — 歸屬感是最強保護因子</div><div class="step-en">Peer companionship — belonging is the strongest protector</div><div class="step-sub">一位穩定同學陪伴；沒有人被放棄</div></div></div>
+          <div class="step-row"><div class="step-no">4</div><div class="step-content"><div class="step-zh">目標拆解 — 大目標讓人焦慮，小目標讓人行動</div><div class="step-en">Goal decomposition — small goals enable action</div></div></div>
+          <div class="step-row"><div class="step-no">5</div><div class="step-content"><div class="step-zh">成長日記 — 每天三問，建立更新能力</div><div class="step-en">Growth journal — 3 daily questions to build self-renewal</div><div class="step-sub">做得最好的/學到什麼/明天改善什麼</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Class order -->
+    <div class="scenario-card" id="s7">
+      <div class="scenario-head" onclick="toggleScenario('s7')">
+        <div class="scenario-emoji">🏛️</div>
+        <div class="scenario-htext">
+          <div class="scenario-zh">面對班級秩序</div>
+          <div class="scenario-en">Building Class Order</div>
+        </div>
+        <div class="scenario-arrow">▶</div>
+      </div>
+      <div class="scenario-body">
+        <div class="compare-pair">
+          <div class="compare-box bad"><div class="compare-label">❌ 普通做法</div><div class="compare-text">老師 → 管理35人 → 精疲力竭</div><div class="compare-en">Teacher manages 35 → exhausted</div></div>
+          <div class="compare-box good"><div class="compare-label">✅ 建模做法</div><div class="compare-text">制度→幹部→小組長→自治→文化</div><div class="compare-en">Policy → Leaders → Groups → Self-governance → Culture</div></div>
+        </div>
+        <div class="steps-list">
+          <div class="step-row"><div class="step-no">1</div><div class="step-content"><div class="step-zh">小組長制度 — 老師管6人，6人管全班</div><div class="step-en">Group leader system — 1 teacher × 6 leaders × 35 students</div></div></div>
+          <div class="step-row"><div class="step-no">2</div><div class="step-content"><div class="step-zh">六大幹部制度 — 功能性系統分工</div><div class="step-en">Six functional directors — distributed leadership</div></div></div>
+          <div class="step-row"><div class="step-no">3</div><div class="step-content"><div class="step-zh">自治會議 — 自己制定的規則更願意遵守</div><div class="step-en">Self-governance meetings — co-created rules are better followed</div></div></div>
+          <div class="step-row"><div class="step-no">4</div><div class="step-content"><div class="step-zh">責任區制度 — 建立主人翁意識</div><div class="step-en">Zone responsibility — ownership mindset</div></div></div>
+        </div>
+        <div class="quote-box" style="margin-top:12px">
+          <div class="quote-zh">讓秩序來自文化，不是老師。老師不在教室，班級依然安靜有序。</div>
+          <div class="quote-en">When order comes from culture, not the teacher, class runs itself.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Problem students -->
+    <div class="scenario-card" id="s8">
+      <div class="scenario-head" onclick="toggleScenario('s8')">
+        <div class="scenario-emoji">🧩</div>
+        <div class="scenario-htext">
+          <div class="scenario-zh">面對問題學生</div>
+          <div class="scenario-en">Supporting At-Risk Students</div>
+        </div>
+        <div class="scenario-arrow">▶</div>
+      </div>
+      <div class="scenario-body">
+        <div class="compare-pair">
+          <div class="compare-box bad"><div class="compare-label">❌ 普通做法</div><div class="compare-text">「這學生有什麼問題？」</div><div class="compare-en">"What's wrong with this student?"</div></div>
+          <div class="compare-box good"><div class="compare-label">✅ 建模做法</div><div class="compare-text">「這學生發生了什麼事？」</div><div class="compare-en">"What happened to this student?"</div></div>
+        </div>
+        <div class="steps-list">
+          <div class="step-row"><div class="step-no">1</div><div class="step-content"><div class="step-zh">建立個案檔案 — 理解整個人，不只記問題</div><div class="step-en">Build case profile — understand the whole person</div><div class="step-sub">家庭/學習/交友/興趣/健康/情緒/特殊事件</div></div></div>
+          <div class="step-row"><div class="step-no">2</div><div class="step-content"><div class="step-zh">追蹤紀錄 — 趨勢比單次事件重要</div><div class="step-en">Trend tracking — patterns matter more than incidents</div></div></div>
+          <div class="step-row"><div class="step-no">3</div><div class="step-content"><div class="step-zh">設計個別介入方案 — 同樣方法不適合所有人</div><div class="step-en">Personalized intervention — no one-size-fits-all</div></div></div>
+          <div class="step-row"><div class="step-no">4</div><div class="step-content"><div class="step-zh">家校合作 — 家庭是學生最大的環境</div><div class="step-en">Family-school collaboration — family = largest environment</div><div class="step-sub">「我們發現孩子有些壓力，一起想辦法幫助他」</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Class culture -->
+    <div class="scenario-card" id="s9">
+      <div class="scenario-head" onclick="toggleScenario('s9')">
+        <div class="scenario-emoji">🌿</div>
+        <div class="scenario-htext">
+          <div class="scenario-zh">建立班級文化</div>
+          <div class="scenario-en">Building Class Culture</div>
+        </div>
+        <div class="scenario-arrow">▶</div>
+      </div>
+      <div class="scenario-body">
+        <div class="compare-pair">
+          <div class="compare-box bad"><div class="compare-label">❌ 普通做法</div><div class="compare-text">學生行為 → 班級文化（被動形成）</div><div class="compare-en">Student behavior → class culture (passive)</div></div>
+          <div class="compare-box good"><div class="compare-label">✅ 建模做法</div><div class="compare-text">班級文化 → 學生行為（主動設計）</div><div class="compare-en">Design culture → shapes student behavior (proactive)</div></div>
+        </div>
+        <div class="steps-list">
+          <div class="step-row"><div class="step-no">1</div><div class="step-content"><div class="step-zh">感恩牆 — 注意力放哪裡，關係就往哪走</div><div class="step-en">Gratitude wall — attention shapes relationship quality</div></div></div>
+          <div class="step-row"><div class="step-no">2</div><div class="step-content"><div class="step-zh">閱讀牆 — 閱讀量→思考力→理解力</div><div class="step-en">Reading wall — reading → thinking → understanding</div></div></div>
+          <div class="step-row"><div class="step-no">3</div><div class="step-content"><div class="step-zh">進步牆 — 比昨天好，不跟別人比</div><div class="step-en">Progress wall — better than yesterday, not compared to others</div></div></div>
+          <div class="step-row"><div class="step-no">4</div><div class="step-content"><div class="step-zh">每日金句 — 建立班級共同信念</div><div class="step-en">Daily quotes — build shared class values & beliefs</div><div class="step-sub">每天早自習一位同學分享一句金句</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Class meeting -->
+    <div class="scenario-card" id="s10">
+      <div class="scenario-head" onclick="toggleScenario('s10')">
+        <div class="scenario-emoji">🏛️</div>
+        <div class="scenario-htext">
+          <div class="scenario-zh">高效班會設計</div>
+          <div class="scenario-en">High-Impact Class Meetings</div>
+        </div>
+        <div class="scenario-arrow">▶</div>
+      </div>
+      <div class="scenario-body">
+        <div class="compare-pair">
+          <div class="compare-box bad"><div class="compare-label">❌ 普通做法</div><div class="compare-text">老師講話30分鐘 → 結束</div><div class="compare-en">Teacher talks 30 min → end</div></div>
+          <div class="compare-box good"><div class="compare-label">✅ 建模做法</div><div class="compare-text">班會 = 人生操作系統課</div><div class="compare-en">Class meeting = Life OS lesson</div></div>
+        </div>
+        <div class="steps-list">
+          <div class="step-row"><div class="step-no">5'</div><div class="step-content"><div class="step-zh">問題蒐集回顧 — 匿名表單收集真實問題</div><div class="step-en">Problem review — anonymous forms reveal real issues</div></div></div>
+          <div class="step-row"><div class="step-no">5'</div><div class="step-content"><div class="step-zh">學生提案 — 從抱怨者變成解決者</div><div class="step-en">Student proposals — from complainers to problem-solvers</div></div></div>
+          <div class="step-row"><div class="step-no">5'</div><div class="step-content"><div class="step-zh">方案討論 + 投票 — 自己投票通過比較願意遵守</div><div class="step-en">Discussion + vote — co-decided rules are better followed</div></div></div>
+          <div class="step-row"><div class="step-no">5'</div><div class="step-content"><div class="step-zh">進度追蹤 — 沒有追蹤等於沒有執行</div><div class="step-en">Progress tracking — no tracking = no execution</div></div></div>
+          <div class="step-row"><div class="step-no">5'</div><div class="step-content"><div class="step-zh">成果檢討 — 哪些有效？哪些調整？</div><div class="step-en">Outcome review — what worked? what to adjust?</div></div></div>
+          <div class="step-row"><div class="step-no">5'</div><div class="step-content"><div class="step-zh">制度更新 — 班級持續進化</div><div class="step-en">System update — class continuously evolves</div></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════ PAGE 4: CADRES ══════════════════════════ -->
+<div class="page" id="page-cadres">
+
+  <div class="section-head">
+    <div class="section-icon">👑</div>
+    <div class="section-title-block">
+      <div class="section-title">六大幹部系統</div>
+      <div class="section-subtitle">Six Student Leadership Roles · Distributed Self-Governance</div>
+    </div>
+  </div>
+
+  <div class="quote-box">
+    <div class="quote-zh">老師管理35人很累；老師培養6個領導者很輕鬆。6個領導者影響全班，影響力自動倍增。</div>
+    <div class="quote-en">Managing 35 students is exhausting. Cultivating 6 leaders is efficient. 6 leaders influence the whole class — impact multiplies automatically.</div>
+  </div>
+
+  <!-- Structure diagram -->
+  <div class="formula-box" style="margin-bottom:24px;">
+    <div class="formula-title">🏗️ 自治結構 Governance Structure</div>
+    <div class="chain" style="justify-content:center; flex-wrap:wrap;">
+      <div class="formula-item">老師 Teacher</div>
+      <div style="color:rgba(255,255,255,.5);font-size:1.4rem">→</div>
+      <div class="formula-item">6位幹部 6 Directors</div>
+      <div style="color:rgba(255,255,255,.5);font-size:1.4rem">→</div>
+      <div class="formula-item">6位小組長 6 Group Leaders</div>
+      <div style="color:rgba(255,255,255,.5);font-size:1.4rem">→</div>
+      <div class="formula-item">35位學生 35 Students</div>
+    </div>
+  </div>
+
+  <div class="student-grid">
+    <div class="student-card">
+      <div class="student-icon">📚</div>
+      <div class="student-title">學習長</div>
+      <div class="student-en">Learning Director</div>
+      <div class="student-list">
+        <div class="student-li">作業追蹤 Homework tracking</div>
+        <div class="student-li">學習榜管理 Study board</div>
+        <div class="student-li">錯題庫整理 Error bank</div>
+        <div class="student-li">讀書會組織 Study groups</div>
+        <div class="student-li">考前規劃 Exam planning</div>
+        <div class="student-li">學習分享 Learning sharing</div>
+      </div>
+    </div>
+    <div class="student-card">
+      <div class="student-icon">🤖</div>
+      <div class="student-title">AI長</div>
+      <div class="student-en">AI Technology Director</div>
+      <div class="student-list">
+        <div class="student-li">AI工具教學 AI tool training</div>
+        <div class="student-li">提示詞整理 Prompt curation</div>
+        <div class="student-li">工具分享 Tool sharing</div>
+        <div class="student-li">簡報製作 Presentation making</div>
+        <div class="student-li">學習診斷 Learning diagnostics</div>
+        <div class="student-li">AI專案 AI projects</div>
+      </div>
+    </div>
+    <div class="student-card">
+      <div class="student-icon">🔥</div>
+      <div class="student-title">激勵長</div>
+      <div class="student-en">Motivation Director</div>
+      <div class="student-list">
+        <div class="student-li">進步榜更新 Progress board</div>
+        <div class="student-li">夢想牆維護 Dream wall</div>
+        <div class="student-li">金句分享 Quote sharing</div>
+        <div class="student-li">成功案例收集 Success stories</div>
+        <div class="student-li">鼓勵活動 Encouragement events</div>
+        <div class="student-li">感恩活動 Gratitude activities</div>
+      </div>
+    </div>
+    <div class="student-card">
+      <div class="student-icon">📖</div>
+      <div class="student-title">閱讀長</div>
+      <div class="student-en">Reading Director</div>
+      <div class="student-list">
+        <div class="student-li">晨讀管理 Morning reading mgmt</div>
+        <div class="student-li">閱讀榜追蹤 Reading board</div>
+        <div class="student-li">書籍推薦 Book recommendations</div>
+        <div class="student-li">閱讀心得整理 Reading journals</div>
+        <div class="student-li">讀書會主持 Book club host</div>
+        <div class="student-li">閱讀牆更新 Reading wall update</div>
+      </div>
+    </div>
+    <div class="student-card">
+      <div class="student-icon">🏃</div>
+      <div class="student-title">運動長</div>
+      <div class="student-en">Fitness Director</div>
+      <div class="student-list">
+        <div class="student-li">晨操帶領 Morning exercise lead</div>
+        <div class="student-li">運動挑戰設計 Fitness challenges</div>
+        <div class="student-li">健康紀錄追蹤 Health tracking</div>
+        <div class="student-li">喝水提醒 Hydration reminders</div>
+        <div class="student-li">體能活動規劃 Activity planning</div>
+        <div class="student-li">睡眠管理 Sleep management</div>
+      </div>
+    </div>
+    <div class="student-card">
+      <div class="student-icon">🔄</div>
+      <div class="student-title">反思長</div>
+      <div class="student-en">Reflection Director</div>
+      <div class="student-list">
+        <div class="student-li">反思表收集 Reflection forms</div>
+        <div class="student-li">週檢討主持 Weekly review</div>
+        <div class="student-li">建議箱管理 Suggestion box</div>
+        <div class="student-li">成長日記整理 Growth journals</div>
+        <div class="student-li">回饋整理彙報 Feedback summary</div>
+        <div class="student-li">制度改善提案 System improvement</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Weekly cadre meeting SOP -->
+  <div style="margin-top:28px;">
+    <div class="section-head">
+      <div class="section-icon">📋</div>
+      <div class="section-title-block">
+        <div class="section-title">幹部週會 SOP</div>
+        <div class="section-subtitle">Weekly Leader Meeting · 10 Minutes · High Impact</div>
+      </div>
+    </div>
+    <div class="sop-grid">
+      <div class="sop-card">
+        <div class="sop-head"><div class="sop-title">幹部週會流程</div><div class="sop-en">Weekly Cadre Meeting SOP (10 min)</div></div>
+        <div class="sop-steps">
+          <div class="sop-step"><div class="sop-dot"></div><div><div class="sop-text">本週成果回報 / This week's results</div><div class="sop-time">3 分鐘</div></div></div>
+          <div class="sop-step"><div class="sop-dot"></div><div><div class="sop-text">本週問題呈報 / This week's problems</div><div class="sop-time">3 分鐘</div></div></div>
+          <div class="sop-step"><div class="sop-dot"></div><div><div class="sop-text">下週行動計畫 / Next week's plan</div><div class="sop-time">3 分鐘</div></div></div>
+          <div class="sop-step"><div class="sop-dot"></div><div><div class="sop-text">老師點評與支持 / Teacher feedback</div><div class="sop-time">1 分鐘</div></div></div>
+        </div>
+      </div>
+      <div class="sop-card">
+        <div class="sop-head"><div class="sop-title">幹部培養路徑</div><div class="sop-en">Leadership Development Pipeline</div></div>
+        <div class="sop-steps">
+          <div class="sop-step"><div class="sop-dot"></div><div class="sop-text">普通學生 Regular student</div></div>
+          <div class="sop-step"><div class="sop-dot"></div><div class="sop-text">小組長 Group leader</div></div>
+          <div class="sop-step"><div class="sop-dot"></div><div class="sop-text">副幹部 Assistant director</div></div>
+          <div class="sop-step"><div class="sop-dot"></div><div class="sop-text">幹部 Director</div></div>
+          <div class="sop-step"><div class="sop-dot"></div><div class="sop-text">核心領導者 Core leader → 接班人 Successor</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════ PAGE 5: TOOLS ══════════════════════════ -->
+<div class="page" id="page-tools">
+
+  <div class="section-head">
+    <div class="section-icon">🛠️</div>
+    <div class="section-title-block">
+      <div class="section-title">班級管理工具箱</div>
+      <div class="section-subtitle">Classroom Management Toolbox · Practical Implementation</div>
+    </div>
+  </div>
+
+  <div class="tools-grid">
+    <div class="tool-card">
+      <div class="tool-emoji">📋</div>
+      <div class="tool-zh">反思表單</div>
+      <div class="tool-en">Reflection Forms</div>
+      <div class="tool-items">
+        <div class="tool-item">今天做得最好的是？ What did I do best today?</div>
+        <div class="tool-item">今天學到什麼？ What did I learn?</div>
+        <div class="tool-item">今天感謝什麼？ What am I grateful for?</div>
+        <div class="tool-item">今天犯什麼錯？ What mistakes did I make?</div>
+        <div class="tool-item">明日目標？ Tomorrow's goal?</div>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-emoji">📊</div>
+      <div class="tool-zh">習慣追蹤表</div>
+      <div class="tool-en">Habit Tracker</div>
+      <div class="tool-items">
+        <div class="tool-item">😴 睡眠時間 Sleep hours</div>
+        <div class="tool-item">📱 手機使用時間 Screen time</div>
+        <div class="tool-item">📖 閱讀時間 Reading time</div>
+        <div class="tool-item">🏃 運動時間 Exercise time</div>
+        <div class="tool-item">📚 學習時間 Study time</div>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-emoji">❌</div>
+      <div class="tool-zh">錯題分析表</div>
+      <div class="tool-en">Error Analysis Table</div>
+      <div class="tool-items">
+        <div class="tool-item">單字 Vocabulary errors</div>
+        <div class="tool-item">文法 Grammar errors</div>
+        <div class="tool-item">閱讀 Reading errors</div>
+        <div class="tool-item">推論 Inference errors</div>
+        <div class="tool-item">粗心 Careless mistakes</div>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-emoji">🎯</div>
+      <div class="tool-zh">目標設定表</div>
+      <div class="tool-en">Goal Setting Form</div>
+      <div class="tool-items">
+        <div class="tool-item">今日目標 Today's goal</div>
+        <div class="tool-item">本週目標 Weekly goal</div>
+        <div class="tool-item">本月目標 Monthly goal</div>
+        <div class="tool-item">學期目標 Semester goal</div>
+        <div class="tool-item">夢想大學 Dream university</div>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-emoji">📮</div>
+      <div class="tool-zh">班會SOP</div>
+      <div class="tool-en">Class Meeting SOP</div>
+      <div class="tool-items">
+        <div class="tool-item">5' 問題蒐集 Collect problems</div>
+        <div class="tool-item">5' 學生提案 Student proposals</div>
+        <div class="tool-item">5' 投票表決 Vote on solutions</div>
+        <div class="tool-item">5' 進度追蹤 Progress tracking</div>
+        <div class="tool-item">5' 制度更新 System update</div>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-emoji">🏆</div>
+      <div class="tool-zh">每月表揚制度</div>
+      <div class="tool-en">Monthly Recognition</div>
+      <div class="tool-items">
+        <div class="tool-item">進步王 Growth Champion</div>
+        <div class="tool-item">閱讀王 Reading Champion</div>
+        <div class="tool-item">服務王 Service Champion</div>
+        <div class="tool-item">運動王 Fitness Champion</div>
+        <div class="tool-item">感恩王 Gratitude Champion</div>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-emoji">📈</div>
+      <div class="tool-zh">班級儀表板</div>
+      <div class="tool-en">Class Dashboard</div>
+      <div class="tool-items">
+        <div class="tool-item">出席率 Attendance rate</div>
+        <div class="tool-item">作業完成率 Homework completion</div>
+        <div class="tool-item">閱讀量 Reading volume</div>
+        <div class="tool-item">單字量 Vocabulary count</div>
+        <div class="tool-item">運動量 Exercise frequency</div>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-emoji">🤖</div>
+      <div class="tool-zh">AI協助班導</div>
+      <div class="tool-en">AI Teacher Assistant</div>
+      <div class="tool-items">
+        <div class="tool-item">錯題分析 Error analysis</div>
+        <div class="tool-item">成績診斷 Grade diagnostics</div>
+        <div class="tool-item">班會紀錄整理 Meeting notes</div>
+        <div class="tool-item">家長通知草稿 Parent messages</div>
+        <div class="tool-item">活動企劃 Event planning</div>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-emoji">📅</div>
+      <div class="tool-zh">晨間10分鐘儀式</div>
+      <div class="tool-en">Morning 10-Min Ritual</div>
+      <div class="tool-items">
+        <div class="tool-item">1' 感恩 Gratitude</div>
+        <div class="tool-item">1' 深呼吸 Deep breathing</div>
+        <div class="tool-item">3' 晨讀 Morning reading</div>
+        <div class="tool-item">3' 英文單字 English vocabulary</div>
+        <div class="tool-item">2' 今日目標 Today's goals</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOP section -->
+  <div style="margin-top:28px;">
+    <div class="section-head">
+      <div class="section-icon">📋</div>
+      <div class="section-title-block">
+        <div class="section-title">標準作業流程 SOP</div>
+        <div class="section-subtitle">Standardized Operating Procedures · Reduce Management Cost</div>
+      </div>
+    </div>
+    <div class="sop-grid">
+      <div class="sop-card">
+        <div class="sop-head"><div class="sop-title">晨讀 SOP</div><div class="sop-en">Morning Reading SOP</div></div>
+        <div class="sop-steps">
+          <div class="sop-step"><div class="sop-dot"></div><div><div class="sop-text">07:30 安靜入座 Quietly take seats</div></div></div>
+          <div class="sop-step"><div class="sop-dot"></div><div><div class="sop-text">07:31 深呼吸 Deep breathing</div></div></div>
+          <div class="sop-step"><div class="sop-dot"></div><div><div class="sop-text">07:32 閱讀開始 Begin reading</div></div></div>
+          <div class="sop-step"><div class="sop-dot"></div><div><div class="sop-text">07:40 寫一句心得 Write one reflection</div></div></div>
+        </div>
+      </div>
+      <div class="sop-card">
+        <div class="sop-head"><div class="sop-title">作業追蹤 SOP</div><div class="sop-en">Homework Tracking SOP</div></div>
+        <div class="sop-steps">
+          <div class="sop-step"><div class="sop-dot"></div><div class="sop-text">老師公告作業 Teacher announces</div></div>
+          <div class="sop-step"><div class="sop-dot"></div><div class="sop-text">小組長統計繳交 Group leaders collect</div></div>
+          <div class="sop-step"><div class="sop-dot"></div><div class="sop-text">學習長彙整回報 Learning director reports</div></div>
+          <div class="sop-step"><div class="sop-dot"></div><div class="sop-text">Google表單自動統計 Auto-tabulated</div></div>
+          <div class="sop-step"><div class="sop-dot"></div><div class="sop-text">未繳者學伴提醒 Buddy system reminder</div></div>
+        </div>
+      </div>
+      <div class="sop-card">
+        <div class="sop-head"><div class="sop-title">每週回饋 SOP</div><div class="sop-en">Weekly Feedback SOP</div></div>
+        <div class="sop-steps">
+          <div class="sop-step"><div class="sop-dot"></div><div class="sop-text">本週最好的是什麼？ What went best?</div></div>
+          <div class="sop-step"><div class="sop-dot"></div><div class="sop-text">本週最差的是什麼？ What went worst?</div></div>
+          <div class="sop-step"><div class="sop-dot"></div><div class="sop-text">下週要改善什麼？ What to improve?</div></div>
+          <div class="sop-step"><div class="sop-dot"></div><div class="sop-text">幹部彙整提出改善方案 Leaders propose solutions</div></div>
+        </div>
+      </div>
+      <div class="sop-card">
+        <div class="sop-head"><div class="sop-title">英文學習 SOP</div><div class="sop-en">English Learning Daily SOP</div></div>
+        <div class="sop-steps">
+          <div class="sop-step"><div class="sop-dot"></div><div class="sop-text">每日20字 20 vocab/day</div></div>
+          <div class="sop-step"><div class="sop-dot"></div><div class="sop-text">每日閱讀10分鐘 10 min reading/day</div></div>
+          <div class="sop-step"><div class="sop-dot"></div><div class="sop-text">每週錯題分析 Weekly error analysis</div></div>
+          <div class="sop-step"><div class="sop-dot"></div><div class="sop-text">每月進步確認 Monthly progress check</div></div>
+          <div class="sop-step"><div class="sop-dot"></div><div class="sop-text">每月單字王表揚 Monthly vocab champion</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════ PAGE 6: FORMULA ══════════════════════════ -->
+<div class="page" id="page-formula">
+
+  <div class="section-head">
+    <div class="section-icon">✨</div>
+    <div class="section-title-block">
+      <div class="section-title">建模大師班導終極公式</div>
+      <div class="section-subtitle">Master Teacher Ultimate Formula · High Agency Classroom Generation</div>
+    </div>
+  </div>
+
+  <!-- Main formula -->
+  <div class="formula-box">
+    <div class="formula-title">🏗️ High Agency 班級生成公式</div>
+    <div class="formula-chain">
+      <div class="formula-item">安全感 Safety</div>
+      <div class="formula-plus">+</div>
+      <div class="formula-item">未來感 Vision</div>
+      <div class="formula-plus">+</div>
+      <div class="formula-item">自治系統 Self-Gov</div>
+      <div class="formula-plus">+</div>
+      <div class="formula-item">回饋系統 Feedback</div>
+      <div class="formula-plus">+</div>
+      <div class="formula-item">榮譽系統 Honor</div>
+      <div class="formula-plus">+</div>
+      <div class="formula-item">成長文化 Growth</div>
+    </div>
+    <div class="formula-arrow">↓</div>
+    <div class="formula-result">High Agency 班級</div>
+    <div class="formula-result-en">Self-Directing · Self-Motivating · Self-Correcting · Self-Updating · Lifelong Growing</div>
+  </div>
+
+  <!-- 6 ultimate student abilities -->
+  <div class="section-head" style="margin-top:8px;">
+    <div class="section-icon">🌟</div>
+    <div class="section-title-block">
+      <div class="section-title">學生六大終極能力</div>
+      <div class="section-subtitle">Six Ultimate Student Capabilities for Life</div>
+    </div>
+  </div>
+
+  <div class="student-grid" style="margin-bottom:28px;">
+    <div class="student-card" style="border-top: 3px solid var(--teal);">
+      <div class="student-icon">📚</div>
+      <div class="student-title">自主學習</div>
+      <div class="student-en">Self-Directed Learning</div>
+      <div class="student-list">
+        <div class="student-li">主動閱讀 Proactive reading</div>
+        <div class="student-li">主動查資料 Self-research</div>
+        <div class="student-li">主動使用AI Use AI tools</div>
+        <div class="student-li">不會→自己找方法 Find own solutions</div>
+      </div>
+    </div>
+    <div class="student-card" style="border-top: 3px solid var(--gold);">
+      <div class="student-icon">⚙️</div>
+      <div class="student-title">自主管理</div>
+      <div class="student-en">Self-Management</div>
+      <div class="student-list">
+        <div class="student-li">管理時間 Manage time</div>
+        <div class="student-li">管理手機 Manage phone use</div>
+        <div class="student-li">管理情緒 Manage emotions</div>
+        <div class="student-li">老師不在→依然認真 Still works without teacher</div>
+      </div>
+    </div>
+    <div class="student-card" style="border-top: 3px solid var(--red);">
+      <div class="student-icon">🔥</div>
+      <div class="student-title">自主激勵</div>
+      <div class="student-en">Self-Motivation</div>
+      <div class="student-list">
+        <div class="student-li">有目標有夢想 Have goals & dreams</div>
+        <div class="student-li">有使命有方向 Have mission & direction</div>
+        <div class="student-li">遇挫折→繼續前進 Persist despite setbacks</div>
+        <div class="student-li">不需外部推動 No external push needed</div>
+      </div>
+    </div>
+    <div class="student-card" style="border-top: 3px solid #7b2d8b;">
+      <div class="student-icon">🔄</div>
+      <div class="student-title">自主修正</div>
+      <div class="student-en">Self-Correction</div>
+      <div class="student-list">
+        <div class="student-li">接受回饋 Accept feedback</div>
+        <div class="student-li">分析錯誤 Analyze errors</div>
+        <div class="student-li">修正方法 Correct methods</div>
+        <div class="student-li">失敗→學習→進步 Fail → Learn → Grow</div>
+      </div>
+    </div>
+    <div class="student-card" style="border-top: 3px solid var(--navy);">
+      <div class="student-icon">⬆️</div>
+      <div class="student-title">自主更新</div>
+      <div class="student-en">Self-Upgrading</div>
+      <div class="student-list">
+        <div class="student-li">閱讀新知 Read new knowledge</div>
+        <div class="student-li">學新技能AI Learn new skills/AI</div>
+        <div class="student-li">接觸新環境 Seek new environments</div>
+        <div class="student-li">舊方法失效→更新 Upgrade when methods fail</div>
+      </div>
+    </div>
+    <div class="student-card" style="border-top: 3px solid var(--green);">
+      <div class="student-icon">∞</div>
+      <div class="student-title">終身成長</div>
+      <div class="student-en">Lifelong Growth</div>
+      <div class="student-list">
+        <div class="student-li">畢業不是結束 Graduation isn't the end</div>
+        <div class="student-li">持續學習反思 Always learning & reflecting</div>
+        <div class="student-li">高維利他=利己 Altruism = self-benefit</div>
+        <div class="student-li">十年後依然成長 Still growing in 10 years</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- teacher level formula -->
+  <div class="formula-box">
+    <div class="formula-title">🎓 老師的最高境界 Teacher's Highest Level</div>
+    <div class="formula-chain">
+      <div class="formula-item">第1層 老師自己做</div>
+      <div style="color:rgba(255,255,255,.4)">→</div>
+      <div class="formula-item">第2層 帶學生做</div>
+      <div style="color:rgba(255,255,255,.4)">→</div>
+      <div class="formula-item">第3層 建立制度</div>
+      <div style="color:rgba(255,255,255,.4)">→</div>
+      <div class="formula-item">第4層 建立文化</div>
+      <div style="color:rgba(255,255,255,.4)">→</div>
+      <div class="formula-item" style="background:var(--gold-light);color:var(--navy)">第5層 學生自己做 ✨</div>
+    </div>
+    <div class="formula-result" style="margin-top:16px; font-size:1.1rem">
+      「自己做最少的事，卻能創造最大的影響力」
+    </div>
+    <div class="formula-result-en">"Do the least yourself, yet create the greatest impact."</div>
+  </div>
+
+  <!-- Education ultimate formula -->
+  <div class="principle-row" style="margin-top:24px;">
+    <div class="principle-card">
+      <div class="principle-emoji">🏗️</div>
+      <div class="principle-zh">班導角色升維</div>
+      <div class="principle-en">Teacher Role Evolution</div>
+      <div class="principle-text">
+        普通老師 → 管理者<br>
+        優秀老師 → 帶領者<br>
+        <strong>大師老師 → 系統設計師</strong><br>
+        <small>Ordinary → Manager → Leader → System Architect</small>
+      </div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-emoji">🌱</div>
+      <div class="principle-zh">教育的終極使命</div>
+      <div class="principle-en">Ultimate Mission of Education</div>
+      <div class="principle-text">
+        送給學生一套<strong>人生操作系統</strong><br>
+        讓學生離開老師之後<br>
+        仍然能持續成長一輩子<br>
+        <small>Give students a Life OS so they grow forever after school</small>
+      </div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-emoji">⚡</div>
+      <div class="principle-zh">高維利他=利己</div>
+      <div class="principle-en">High-Dimensional Altruism</div>
+      <div class="principle-text">
+        幫助他人 = 成長自己<br>
+        服務班級 = 訓練能力<br>
+        <strong>High Agency 學生 = 高維利他者</strong><br>
+        <small>Helping others = growing yourself; service = capability training</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="quote-box" style="margin-top:8px;">
+    <div class="quote-zh">這六大槓桿不是在管理學生，而是在塑造學生未來二十年的人格系統。教育的終點不是依賴老師，而是學會自我修復、自我更新、自我創造。</div>
+    <div class="quote-en">These six levers aren't managing students — they're shaping students' character systems for the next twenty years. Education's endpoint isn't teacher-dependency; it's self-repair, self-renewal, and self-creation.</div>
+  </div>
+
+  <div class="page-footer">
+    建模大師班導 OS · Classroom System Architect · 高維利他 = 利己 · High Agency 學生養成系統
+  </div>
+
+</div>
+<!-- end pages -->
+</div><!-- end main -->
+
+<script>
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.page === id);
+  });
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function toggleLever(id) {
+  const card = document.getElementById(id);
+  card.classList.toggle('open');
+}
+
+function toggleScenario(id) {
+  const card = document.getElementById(id);
+  card.classList.toggle('open');
+}
+
+// Open first lever by default
+document.addEventListener('DOMContentLoaded', () => {
+  toggleLever('lever1');
+});
+</script>
+</body>
+</html>
